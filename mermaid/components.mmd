@@ -1,0 +1,22 @@
+graph LR
+    subgraph "src/index.ts"
+        MAIN[main function]
+        CHECK[checkGhInstalled]
+        AUTH[checkGhAuth]
+        PR[listPRs/createPR/viewPR/checkoutPR]
+        ISSUE[listIssues/createIssue/viewIssue]
+        WF[listWorkflows/viewWorkflowRun]
+    end
+    
+    subgraph "score.js"
+        SCORE[Scoring CLI]
+        DB[(SQLite DB)]
+    end
+    
+    MAIN --> CHECK
+    MAIN --> AUTH
+    MAIN --> PR
+    MAIN --> ISSUE
+    MAIN --> WF
+    MAIN --> SCORE
+    SCORE --> DB

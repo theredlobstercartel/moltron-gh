@@ -1,0 +1,25 @@
+sequenceDiagram
+    participant User
+    participant CLI
+    participant Skill
+    participant Gh
+    participant GitHub
+
+    User->>CLI: pr list
+    CLI->>Skill: list_prs()
+    Skill->>Gh: gh pr list
+    Gh->>GitHub: API call
+    GitHub->>Gh: PR list
+    Gh->>Skill: formatted output
+    Skill->>CLI: JSON result
+    CLI->>User: display output
+    
+    alt Not authenticated
+        Skill->>CLI: auth error
+        CLI->>User: show auth instructions
+    end
+    
+    alt Gh not installed
+        Skill->>CLI: install error
+        CLI->>User: show install instructions
+    end
