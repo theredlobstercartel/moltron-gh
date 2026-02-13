@@ -1,79 +1,161 @@
-# @smythos/sdk Empty Template
+# 🐙 moltron-gh
 
-This project is an empty template to get started with [@smythos/sdk](https://www.npmjs.com/package/@smythos/sdk).
+> *GitHub CLI wrapper com SmythOS - Gerencie PRs, issues e workflows com inteligência*
 
-This project was bootstrapped with [SRE SDK Template : Branch sdk-empty](https://github.com/SmythOS/sre-project-templates/tree/sdk-empty).
+Skill criado com [Moltron](https://github.com/theredlobstercartel) para o ecossistema OpenClaw. Interface inteligente para o GitHub CLI com tratamento de erros, validação de pré-requisitos e observabilidade completa.
 
-## Getting Started
+## 🚀 Instalação
 
-### Prerequisites
+### Pré-requisitos
 
--   [Node.js](https://nodejs.org/) (v20 or higher)
--   An API key for an OpenAI model (e.g., `gpt-4o-mini`).
+1. **GitHub CLI instalado**:
+   ```bash
+   # Se tiver o moltron-package-installer
+   node ~/.openclaw/workspace/skills/moltron-package-installer/scripts/moltron-package-installer/dist/index.js install gh
+   ```
 
-### Installation
+2. **Autenticado com GitHub**:
+   ```bash
+   gh auth login
+   ```
 
-1.  Clone the repository:
+3. **Instalar o skill**:
+   ```bash
+   git clone https://github.com/theredlobstercartel/moltron-gh.git
+   cd moltron-gh
+   npm install
+   npm run build
+   ```
 
-    ```bash
-    git clone --branch code-agent-minimal https://github.com/smythos/sre-project-templates.git simple-agent-example
-    cd simple-agent-example
-    ```
+## 📖 Uso
 
-2.  Install the dependencies:
+### Verificar Status
 
-    ```bash
-    npm install
-    ```
+```bash
+node dist/index.js status
+```
 
-3.  Set up your OpenAI API key:
+### Pull Requests
 
-    The application uses the [@smythos/sdk](https://www.npmjs.com/package/@smythos/sdk) which has a built-in secret management system called Smyth Vault.
-    During development, we can use a simple json file to store vault secrets.
+```bash
+# Listar PRs (open/closed/merged/all)
+node dist/index.js pr list
+node dist/index.js pr list closed
 
-    Create a file in one of the following locations:
+# Criar PR
+node dist/index.js pr create "Fix: resolve memory leak"
 
-    -   `~/.smyth/.sre/vault.json` (user home directory : recommended)
-    -   `./.smyth/.sre/vault.json` (local project directory)
+# Ver detalhes do PR
+node dist/index.js pr view 42
 
-    The file should have the following format:
+# Fazer checkout do PR
+node dist/index.js pr checkout 42
+```
 
-    ```json
-    {
-        "default": {
-            "openai": "sk-xxxxxx-Your-OpenAI-API-Key",
-            "anthropic": "",
-            "googleai": "",
-            "groq": "",
-            "togetherai": ""
-        }
-    }
-    ```
+### Issues
 
-    for this example code, only the **openai** key is needed, but you can pre-configure other models if you intend to use them.
+```bash
+# Listar issues
+node dist/index.js issue list
+node dist/index.js issue list closed
 
-    _Note: We are are preparing a CLI tool that will help you scaffold Smyth Projects and create/manage the vault._
+# Criar issue
+node dist/index.js issue create "Bug: crash on startup"
 
-### Running the Application
+# Ver issue
+node dist/index.js issue view 123
+```
 
-1.  Build the project:
+### Workflows
 
-    ```bash
-    npm run build
-    ```
+```bash
+# Listar runs recentes
+node dist/index.js workflow list
 
-2.  Run the script:
+# Ver logs de um run
+node dist/index.js workflow view 123456789
+```
 
-    ```bash
-    npm start
-    ```
+## 🧠 Skills do Agente
 
-    The application will execute `src/index.ts`, demonstrating the different agent interaction methods in your terminal.
+O agente SmythOS expõe estas skills para uso programático:
 
-### Implementing AI Agents
+| Skill | Descrição |
+|-------|-----------|
+| `check_prerequisites` | Verifica se gh está instalado e autenticado |
+| `list_prs` | Lista PRs do repo atual |
+| `create_pr` | Cria novo PR |
+| `view_pr` | Visualiza detalhes de um PR |
+| `checkout_pr` | Faz checkout local de um PR |
+| `list_issues` | Lista issues do repo |
+| `create_issue` | Cria nova issue |
+| `view_issue` | Visualiza detalhes de uma issue |
+| `list_workflows` | Lista execuções de workflows |
+| `view_workflow` | Visualiza logs de um workflow |
 
-Read the [docs](https://smythos.github.io/sre/sdk/) to learn how to implement AI agents.
+## 🧪 Scoring
 
-## License
+Avalie o skill após cada uso:
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+```bash
+node score.js --insert <score>
+
+# Ver histórico de scores
+node score.js --list
+```
+
+**Critérios:**
+
+| Score | Critério |
+|-------|----------|
+| 100 | Comando executou com sucesso, saída correta |
+| 80 | Sucesso com pequenas ressalvas |
+| 60 | Precisou de retry ou workaround |
+| 40 | Erro, mas mensagem clara |
+| 0 | Crash ou erro não tratado |
+
+## 📡 Observabilidade
+
+Traces OpenTelemetry enviados para Signoz:
+- Endpoint: `http://localhost:4318`
+- Service name: `moltron-gh`
+- Métricas: duração de comandos, taxas de sucesso/erro
+
+## 🏗️ Arquitetura
+
+Diagramas em `mermaid/`:
+- `architecture.mmd` - Visão geral
+- `workflow.mmd` - Fluxo de execução
+- `components.mmd` - Componentes
+
+## 🛠️ Desenvolvimento
+
+```bash
+# Editar código
+vim src/index.ts
+
+# Recompilar
+npm run build
+
+# Testar
+node dist/index.js status
+```
+
+## 📦 Stack
+
+- [GitHub CLI](https://cli.github.com/) - Interface com GitHub
+- [SmythOS SDK](https://smythos.github.io/sre/sdk/) - Framework de agentes
+- [OpenTelemetry](https://opentelemetry.io/) - Observabilidade
+- [Signoz](https://signoz.io/) - Coletor de traces
+- [Moltron](https://github.com/theredlobstercartel) - Criador de skills
+
+## 🦞 The Red Lobster Cartel
+
+Parte da fábrica de software pessoal onde IA e humanos colaboram.
+
+- **Org**: https://github.com/theredlobstercartel
+- **Main repo**: https://github.com/theredlobstercartel/red-lobster-cartel
+
+---
+
+*Construído com 🦞 e código*
